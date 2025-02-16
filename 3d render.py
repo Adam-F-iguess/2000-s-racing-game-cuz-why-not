@@ -1,3 +1,5 @@
+#credit to Leet Unova (https://github.com/LeetUnova/Pygame-3D-Graphics?source=post_page-----c36ec2e03a33---------------------------------------) for the main code (all i did was add some of the movement parts)
+
 import pygame
 from math import sin, cos, pi
 
