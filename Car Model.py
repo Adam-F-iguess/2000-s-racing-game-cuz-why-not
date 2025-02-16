@@ -8,11 +8,13 @@ class Object3d:
                     vertices: list[list[float]],
                     edges: list[list[int]],
                     faces: list[list[int]],
-                    position: list[float]) -> None:
+                    position: list[float],
+                    rotation: float) -> None:
         self.vertices = vertices
         self.edges = edges
         self.faces = faces
         self.position = position
+        self.rotation = rotation
     def draw(self, surface: pygame.Surface) -> None:
         halfWidth = surface.get_width() / 2
         halfHeight = surface.get_height() / 2
@@ -90,6 +92,7 @@ class Car(Object3d):
         [4, -3, 6],
         [13, -1, 6],
         [11, -3, 6],
+        [7, -1.25, 3]
     ]
     edges: list[list[int]] = [
         [0, 1],
@@ -128,8 +131,8 @@ class Car(Object3d):
         [1, 4, 12, 9],
         [3, 6, 14, 11]
     ]
-    def __init__(self, position: list[float]) -> None:
-        super().__init__(Car.vertices, Car.edges, Car.faces, position)
+    def __init__(self, position: list[float], rotation: float) -> None:
+        super().__init__(Car.vertices, Car.edges, Car.faces, position, rotation)
 
 window = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("3d Graphics")
@@ -143,6 +146,7 @@ draging = False
 offset_x = 0
 offset_y = 0
 temp_pos_y = 0
+blank = 0
 
 while not done:
     for event in pygame.event.get():
@@ -158,8 +162,8 @@ while not done:
         if event.type == pygame.MOUSEMOTION:
             if draging:
                 mouse_x, mouse_y = event.pos
-                blank = mouse_x - offset_x
-                temp_pos_y = mouse_y - offset_y
+                blank += (mouse_x - offset_x)
+                temp_pos_y += (mouse_y - offset_y)
 
 
     keys = pygame.key.get_pressed()
