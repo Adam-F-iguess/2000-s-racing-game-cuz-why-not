@@ -39,7 +39,8 @@ class Object3d:
 
 class Cube(Object3d):
     vertices: list[list[float]] = [
-        [-1, -1, -1],
+        [-1, -1, -
+         1],
         [1, -1, -1],
         [1, 1, -1],
         [-1, 1, -1],

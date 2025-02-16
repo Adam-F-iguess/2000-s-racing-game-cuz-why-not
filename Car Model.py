@@ -20,6 +20,21 @@ class Object3d:
             [
                 o[u] * 50 + self.position[u] for u in range(3)
             ] for o in self.vertices]
+        
+        for face in self.faces:
+            points = []
+            for vertex in face:
+                pointDiv = verts[vertex][2] / 400
+                if pointDiv == 0:
+                    break
+                point = [
+                    verts[vertex][0] / pointDiv + halfWidth,
+                    verts[vertex][1] / pointDiv + halfHeight
+                ]
+                points.append(point)
+            if len(points) == len(face):
+                pygame.draw.polygon(surface, (255, 255, 255), points)
+
         for edge in self.edges:
             point1Div = verts[edge[0]][2] / 400
             if point1Div == 0:
@@ -35,28 +50,63 @@ class Object3d:
                 verts[edge[1]][0] / point2Div + halfWidth,
                 verts[edge[1]][1] / point2Div + halfHeight
             ]
-            pygame.draw.line(surface, (255, 255, 255), point1, point2)
+            pygame.draw.line(surface, (0, 0, 0), point1, point2)
 
 class Cube(Object3d):
     vertices: list[list[float]] = [
+        [-1, 1.5, -1],
         [-1, -1, -1],
-        [1, -1, -1],
-        [0, (sqrt(3) -1), -1],
-        [0, -1, (sqrt(3) -1)]
+        [15, 1.5, -1],
+        [15, -1, -1],
+        [3, -1, -1],
+        [4, -3, -1],
+        [13, -1, -1],
+        [11, -3, -1],
+        [-1, 1.5, 5],
+        [-1, -1, 5],
+        [15, 1.5, 5],
+        [15, -1, 5],
+        [3, -1, 5],
+        [4, -3, 5],
+        [13, -1, 5],
+        [11, -3, 5],
     ]
     edges: list[list[int]] = [
         [0, 1],
-        [1, 2],
-        [2, 0],
-        [3, 0],
-        [3, 1],
-        [3, 2]
+        [0, 2],
+        [2, 3],
+        [1, 4],
+        [4, 5],
+        [3, 6],
+        [6, 7],
+        [5, 7],
+        [8, 9],
+        [8, 10],
+        [10, 11],
+        [9, 12],
+        [12, 13],
+        [11, 14],
+        [14, 15],
+        [13, 15],
+        [0, 8],
+        [1, 9],
+        [2, 10],
+        [3, 11],
+        [4, 12],
+        [5, 13],
+        [6, 14],
+        [7, 15]
     ]
     faces: list[list[int]] = [
-        [0, 1, 2],
-        [0, 1, 3],
-        [0, 2, 3],
-        [1, 2, 3]
+        [0, 1, 4, 5, 7, 6, 3, 2],
+        [8, 9, 12, 13, 15, 14, 11, 10],
+        [0, 1, 9, 8],
+        [2, 3, 11, 10],
+        [4, 5, 13, 12],
+        [6, 7, 15, 14],
+        [0, 2, 10, 8],
+        [1, 4, 12, 9],
+        [3, 6, 14, 11]
     ]
     def __init__(self, position: list[float]) -> None:
         super().__init__(Cube.vertices, Cube.edges, Cube.faces, position)
@@ -101,7 +151,7 @@ while not done:
         temp_pos += 1
     if keys[pygame.K_d]:
         temp_pos -= 1 
-    pygame.draw.rect(window, (0, 0, 0), (0, 0, 1280, 720))
+    pygame.draw.rect(window, (135, 206, 235), (0, 0, 1280, 720))
     cube.position[0] =  temp_pos
     cube.position[1] =  temp_pos_y
     cube.draw(window)
