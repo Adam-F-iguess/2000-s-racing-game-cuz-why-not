@@ -1,8 +1,30 @@
 #credit to Leet Unova (https://github.com/LeetUnova/Pygame-3D-Graphics?source=post_page-----c36ec2e03a33---------------------------------------) for the main code (all i did was add some of the movement parts)
 
 import pygame
-from math import sin, cos, pi, sqrt
+from math import sin, cos, pi, sqrt, radians
 
+def rotate(point, vertice, centre, angle, axis):
+    print(centre, axis)
+    cntx = centre[0]
+    cnty = centre[2]
+    theta = angle
+    pty = vertice[2] - cnty
+    ptx = vertice[0] - cntx
+    print(cntx, cnty, ptx, pty)
+
+    if axis == 0:
+        p2x = ptx * cos(radians(theta)) + pty * sin(radians(theta))
+        p2x += cntx
+        point = p2x
+
+    elif axis == 2:
+        p2y = pty * cos(radians(theta)) - ptx * sin(radians(theta))
+        p2y += cnty
+        point = p2y
+        
+    print(point)
+
+    return point
 class Object3d:
     def __init__(self,
                     vertices: list[list[float]],
@@ -20,7 +42,7 @@ class Object3d:
         halfHeight = surface.get_height() / 2
         verts = [
             [
-                o[u] * 50 + self.position[u] for u in range(3)
+                rotate(o[u], o, self.vertices[-1], self.rotation, u)  * 50 + self.position[u] for u in range(3)
             ] for o in self.vertices]
         
         continue_value = True
@@ -72,7 +94,7 @@ class Object3d:
                 verts[edge[1]][1] / point2Div + halfHeight
             ]
             pygame.draw.line(surface, (0, 0, 0), point1, point2)
-            print(point1Div, point2Div, point1, point2)
+
 
 class Car(Object3d):
     vertices: list[list[float]] = [
@@ -100,6 +122,8 @@ class Car(Object3d):
         [2, 3],
         [1, 4],
         [4, 5],
+        [4, 6],
+        [12, 14],
         [3, 6],
         [6, 7],
         [5, 7],
@@ -138,7 +162,7 @@ window = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("3d Graphics")
 done = False
 
-car = Car([0, 0, 0])
+car = Car([0, 0, 0], 0)
 
 ticks = 0
 temp_pos = 0
@@ -162,8 +186,7 @@ while not done:
         if event.type == pygame.MOUSEMOTION:
             if draging:
                 mouse_x, mouse_y = event.pos
-                blank += (mouse_x - offset_x)
-                temp_pos_y += (mouse_y - offset_y)
+                temp_pos_y == (mouse_y - offset_y)
 
 
     keys = pygame.key.get_pressed()
@@ -175,9 +198,14 @@ while not done:
         temp_pos += 1
     if keys[pygame.K_d]:
         temp_pos -= 1 
+    if keys[pygame.K_q]:
+        blank += 1
+    if keys[pygame.K_e]:
+        blank -= 1 
     pygame.draw.rect(window, (135, 206, 235), (0, 0, 1280, 720))
     car.position[0] =  temp_pos
     car.position[1] =  temp_pos_y
+    car.rotation = blank
     car.draw(window)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
