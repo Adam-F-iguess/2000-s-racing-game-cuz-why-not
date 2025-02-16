@@ -21,27 +21,46 @@ class Object3d:
                 o[u] * 50 + self.position[u] for u in range(3)
             ] for o in self.vertices]
         
+        continue_value = True
+        points = []
+        for vertex in self.faces[-1]:
+            pointDiv = verts[vertex][2] / 400
+            if pointDiv <= 0:
+                pointDiv = 1/400
+            point = [
+                verts[vertex][0] / pointDiv + halfWidth,
+                verts[vertex][1] / pointDiv + halfHeight
+            ]
+            points.append(point)
+        if len(points) == len(self.faces[-1]):
+            if pointDiv == 1/400:
+                continue_value = False
+
         for face in self.faces:
+            if not continue_value:
+                break
             points = []
             for vertex in face:
                 pointDiv = verts[vertex][2] / 400
-                if pointDiv == 0:
-                    break
+                if pointDiv <= 0:
+                    pointDiv = 1/400
                 point = [
                     verts[vertex][0] / pointDiv + halfWidth,
                     verts[vertex][1] / pointDiv + halfHeight
                 ]
                 points.append(point)
             if len(points) == len(face):
+                if face == self.faces[-1] and pointDiv == 1/400:
+                    break
                 pygame.draw.polygon(surface, (255, 255, 255), points)
 
         for edge in self.edges:
             point1Div = verts[edge[0]][2] / 400
-            if point1Div == 0:
-                continue
+            if point1Div <= 0:
+                point1Div = 1/400
             point2Div = verts[edge[1]][2] / 400
-            if point2Div == 0:
-                continue
+            if point2Div <= 0:
+                point2Div = 1/400
             point1 = [
                 verts[edge[0]][0] / point1Div + halfWidth,
                 verts[edge[0]][1] / point1Div + halfHeight
@@ -51,25 +70,26 @@ class Object3d:
                 verts[edge[1]][1] / point2Div + halfHeight
             ]
             pygame.draw.line(surface, (0, 0, 0), point1, point2)
+            print(point1Div, point2Div, point1, point2)
 
 class Car(Object3d):
     vertices: list[list[float]] = [
-        [-1, 1.5, -1],
-        [-1, -1, -1],
-        [15, 1.5, -1],
-        [15, -1, -1],
-        [3, -1, -1],
-        [4, -3, -1],
-        [13, -1, -1],
-        [11, -3, -1],
-        [-1, 1.5, 5],
-        [-1, -1, 5],
-        [15, 1.5, 5],
-        [15, -1, 5],
-        [3, -1, 5],
-        [4, -3, 5],
-        [13, -1, 5],
-        [11, -3, 5],
+        [-1, 1.5, 0],
+        [-1, -1, 0],
+        [15, 1.5, 0],
+        [15, -1, 0],
+        [3, -1, 0],
+        [4, -3, 0],
+        [13, -1, 0],
+        [11, -3, 0],
+        [-1, 1.5, 6],
+        [-1, -1, 6],
+        [15, 1.5, 6],
+        [15, -1, 6],
+        [3, -1, 6],
+        [4, -3, 6],
+        [13, -1, 6],
+        [11, -3, 6],
     ]
     edges: list[list[int]] = [
         [0, 1],
@@ -115,7 +135,7 @@ window = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("3d Graphics")
 done = False
 
-car = Car([0, 0, 150])
+car = Car([0, 0, 0])
 
 ticks = 0
 temp_pos = 0
@@ -163,7 +183,6 @@ while not done:
     
 
     pygame.display.update()
-    print(temp_pos_y, car.position[1])
     ticks += 1
 
 exit()
