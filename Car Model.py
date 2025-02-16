@@ -52,7 +52,7 @@ class Object3d:
             ]
             pygame.draw.line(surface, (0, 0, 0), point1, point2)
 
-class Cube(Object3d):
+class Car(Object3d):
     vertices: list[list[float]] = [
         [-1, 1.5, -1],
         [-1, -1, -1],
@@ -109,13 +109,13 @@ class Cube(Object3d):
         [3, 6, 14, 11]
     ]
     def __init__(self, position: list[float]) -> None:
-        super().__init__(Cube.vertices, Cube.edges, Cube.faces, position)
+        super().__init__(Car.vertices, Car.edges, Car.faces, position)
 
 window = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("3d Graphics")
 done = False
 
-cube = Cube([0, 0, 150])
+car = Car([0, 0, 150])
 
 ticks = 0
 temp_pos = 0
@@ -144,17 +144,17 @@ while not done:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        cube.position[2] -= 1
+        car.position[2] -= 1
     if keys[pygame.K_s]:
-        cube.position[2] += 1
+        car.position[2] += 1
     if keys[pygame.K_a]:
         temp_pos += 1
     if keys[pygame.K_d]:
         temp_pos -= 1 
     pygame.draw.rect(window, (135, 206, 235), (0, 0, 1280, 720))
-    cube.position[0] =  temp_pos
-    cube.position[1] =  temp_pos_y
-    cube.draw(window)
+    car.position[0] =  temp_pos
+    car.position[1] =  temp_pos_y
+    car.draw(window)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -163,7 +163,7 @@ while not done:
     
 
     pygame.display.update()
-    print(temp_pos_y, cube.position[1])
+    print(temp_pos_y, car.position[1])
     ticks += 1
 
 exit()
