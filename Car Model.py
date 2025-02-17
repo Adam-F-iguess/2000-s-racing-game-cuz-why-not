@@ -4,25 +4,43 @@ import pygame
 from math import sin, cos, pi, sqrt, radians
 
 def rotate(point, vertice, centre, angle, axis):
-    print(centre, axis)
     cntx = centre[0]
-    cnty = centre[2]
+    cnty = centre[1]
+    cntz = centre[2]
     theta = angle
-    pty = vertice[2] - cnty
+    ptz = vertice[2] - cntz
+    pty = vertice[1] - cnty
     ptx = vertice[0] - cntx
-    print(cntx, cnty, ptx, pty)
+
+    p2z = ptz * cos(radians(theta[0])) - ptx * sin(radians(theta[0]))
+    p2x = ptx * cos(radians(theta[0])) + ptz * sin(radians(theta[0]))
+
+    ptz = p2z
+
+    p2z = ptz * cos(radians(theta[1])) + pty * sin(radians(theta[1]))
+    p2y = pty * cos(radians(theta[1])) - ptz * sin(radians(theta[1]))
+
+    ptx = p2x
+    pty = p2y
+
+    p2x = ptx* cos(radians(theta[2])) - pty * sin(radians(theta[2]))
+    p2y = pty * cos(radians(theta[2])) + ptx * sin(radians(theta[2]))
+    
+    
+
+    p2x += cntx
+    p2y += cnty
+    p2z += cntz
 
     if axis == 0:
-        p2x = ptx * cos(radians(theta)) + pty * sin(radians(theta))
-        p2x += cntx
         point = p2x
 
-    elif axis == 2:
-        p2y = pty * cos(radians(theta)) - ptx * sin(radians(theta))
-        p2y += cnty
+    elif axis == 1:
         point = p2y
+
+    elif axis == 2:
+        point = p2z
         
-    print(point)
 
     return point
 class Object3d:
@@ -31,7 +49,7 @@ class Object3d:
                     edges: list[list[int]],
                     faces: list[list[int]],
                     position: list[float],
-                    rotation: float) -> None:
+                    rotation: list[float]) -> None:
         self.vertices = vertices
         self.edges = edges
         self.faces = faces
@@ -155,14 +173,14 @@ class Car(Object3d):
         [1, 4, 12, 9],
         [3, 6, 14, 11]
     ]
-    def __init__(self, position: list[float], rotation: float) -> None:
+    def __init__(self, position: list[float], rotation: list[float]) -> None:
         super().__init__(Car.vertices, Car.edges, Car.faces, position, rotation)
 
 window = pygame.display.set_mode((1280, 720))
 pygame.display.set_caption("3d Graphics")
 done = False
 
-car = Car([0, 0, 0], 0)
+car = Car([0, 0, 500], [0, 0, 0])
 
 ticks = 0
 temp_pos = 0
@@ -171,24 +189,10 @@ offset_x = 0
 offset_y = 0
 temp_pos_y = 0
 blank = 0
+rotx = 0
+rotz = 0
 
 while not done:
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:            
-                    draging = True
-                    offset_x, offset_y = event.pos
-
-        elif event.type == pygame.MOUSEBUTTONUP:
-            if event.button == 1:            
-                draging = False
-
-        if event.type == pygame.MOUSEMOTION:
-            if draging:
-                mouse_x, mouse_y = event.pos
-                temp_pos_y == (mouse_y - offset_y)
-
-
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         car.position[2] -= 1
@@ -199,13 +203,34 @@ while not done:
     if keys[pygame.K_d]:
         temp_pos -= 1 
     if keys[pygame.K_q]:
-        blank += 1
+        blank += .5
     if keys[pygame.K_e]:
-        blank -= 1 
+        blank -= .5
+    if keys[pygame.K_r]:
+        temp_pos_y += 1
+    if keys[pygame.K_f]:
+        temp_pos_y -= 1
+    if keys[pygame.K_z]:
+        rotx += .5
+    if keys[pygame.K_x]:
+        rotx -= .5
+    if keys[pygame.K_c]:
+        rotz += .5
+    if keys[pygame.K_v]:
+        rotz -= .5
+    if keys[pygame.K_ESCAPE]:
+        blank = 0
+        rotx = 0
+        rotz = 0
+        temp_pos = 0
+        temp_pos_y = 0
+        car.position[2] =  500
     pygame.draw.rect(window, (135, 206, 235), (0, 0, 1280, 720))
     car.position[0] =  temp_pos
     car.position[1] =  temp_pos_y
-    car.rotation = blank
+    car.rotation[0] = blank
+    car.rotation[1] = rotx
+    car.rotation[2] = rotz
     car.draw(window)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
