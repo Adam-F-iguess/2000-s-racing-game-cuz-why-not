@@ -1,4 +1,22 @@
 #credit to Leet Unova (https://github.com/LeetUnova/Pygame-3D-Graphics?source=post_page-----c36ec2e03a33---------------------------------------) for the main code (all i did was add some of the movement parts)
+import sys
+import subprocess
+
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+try:
+    install("pygame_menu")
+except:
+    pass
+try:
+    install("pygame")
+except:
+    pass
+try:
+    install("math")
+except:
+    pass
 
 import pygame
 import pygame_menu
