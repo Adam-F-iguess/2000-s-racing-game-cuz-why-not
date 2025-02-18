@@ -13,10 +13,6 @@ try:
     install("pygame")
 except:
     pass
-try:
-    install("math")
-except:
-    pass
 
 import pygame
 import pygame_menu
