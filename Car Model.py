@@ -174,15 +174,14 @@ class Car(Object3d):
         [11, -3, 6],
         [7, -1.25, 3],
         # Wheel vertices (cylinders)
-        [2, 1.5, 1], [2, 1.5, 2], [2, 2.5, 1], [2, 2.5, 2],  # Front left wheel
-        [12, 1.5, 1], [12, 1.5, 2], [12, 2.5, 1], [12, 2.5, 2],  # Front right wheel
-        [2, 1.5, 5], [2, 1.5, 6], [2, 2.5, 5], [2, 2.5, 6],  # Rear left wheel
-        [12, 1.5, 5], [12, 1.5, 6], [12, 2.5, 5], [12, 2.5, 6],  # Rear right wheel
-        # Additional vertices for wheel cylinders
-        [2, 1.5, 1.5], [2, 2.5, 1.5],  # Front left wheel
-        [12, 1.5, 1.5], [12, 2.5, 1.5],  # Front right wheel
-        [2, 1.5, 5.5], [2, 2.5, 5.5],  # Rear left wheel
-        [12, 1.5, 5.5], [12, 2.5, 5.5]  # Rear right wheel
+        [2, 1.5, 0], [2, 2.5, 0], [3, 1.5, 0], [3, 2.5, 0],  # Front left wheel
+        [13, 1.5, 0], [13, 2.5, 0], [12, 1.5, 0], [12, 2.5, 0],  # Front right wheel
+        [2, 1.5, 6], [2, 2.5, 6], [3, 1.5, 6], [3, 2.5, 6],  # Rear left wheel
+        [13, 1.5, 6], [13, 2.5, 6], [12, 1.5, 6], [12, 2.5, 6],  # Rear right wheel
+        [2, 1.5, 0.5], [2, 2.5, 0.5], [3, 1.5, 0.5], [3, 2.5, 0.5],  # Front left wheel
+        [13, 1.5, 0.5], [13, 2.5, 0.5], [12, 1.5, 0.5], [12, 2.5, 0.5],  # Front right wheel
+        [2, 1.5, 5.5], [2, 2.5, 5.5], [3, 1.5, 5.5], [3, 2.5, 5.5],  # Rear left wheel
+        [13, 1.5, 5.5], [13, 2.5, 5.5], [12, 1.5, 5.5], [12, 2.5, 5.5]  # Rear right wheel
     ]
     edges: list[list[int]] = [
         [0, 1],
@@ -217,10 +216,10 @@ class Car(Object3d):
         [25, 26], [26, 28], [28, 27], [27, 25],  # Rear left wheel
         [29, 30], [30, 32], [32, 31], [31, 29],  # Rear right wheel
         # Additional edges for wheel cylinders
-        [33, 34], [34, 18], [34, 20], [33, 17], [33, 19], [34, 19],  # Front left wheel
-        [35, 36], [36, 22], [36, 24], [35, 21], [35, 23], [36, 23],  # Front right wheel
-        [37, 38], [38, 26], [38, 28], [37, 25], [37, 27], [38, 27],  # Rear left wheel
-        [39, 40], [40, 30], [40, 32], [39, 29], [39, 31], [40, 31]  # Rear right wheel
+        [33, 34], [34, 36], [36, 35], [33, 35], [33, 17], [34, 18], [35, 19], [36, 20],  # Front left wheel
+        [37, 38], [38, 40], [40, 39], [39, 37], [37, 21], [38, 22], [39, 23], [40, 24],  # Front right wheel
+        [41, 42], [42, 44], [44, 43], [43, 41], [41, 25], [42, 26], [43, 27], [44, 28],  # Rear left wheel
+        [45, 46], [46, 48], [48, 47], [47, 45], [45, 29], [46, 30], [47, 31], [48, 32]   # Rear right wheel
     ]
     faces: list[list[int]] = [
         [0, 1, 4, 5, 7, 6, 3, 2],
@@ -237,13 +236,37 @@ class Car(Object3d):
         [21, 22, 24, 23],  # Front right wheel
         [25, 26, 28, 27],  # Rear left wheel
         [29, 30, 32, 31],  # Rear right wheel
+        [33, 34, 36, 35],  # Front left wheel
+        [37, 38, 40, 39],  # Front right wheel
+        [41, 42, 44, 43],  # Rear left wheel
+        [45, 46, 48, 47],  # Rear right wheel
         # Additional faces for wheel cylinders
-        [17, 33, 34, 18], [19, 34, 20, 18], [17, 33, 19, 34],  # Front left wheel
-        [21, 35, 36, 22], [23, 36, 24, 22], [21, 35, 23, 36],  # Front right wheel
-        [25, 37, 38, 26], [27, 38, 28, 26], [25, 37, 27, 38],  # Rear left wheel
-        [29, 39, 40, 30], [31, 40, 32, 30], [29, 39, 31, 40]  # Rear right wheel
+        [17, 33, 34, 18], [19, 35, 36, 20], [17, 35, 33, 19], [18, 34, 36, 20],  # Front left wheel
+        [21, 37, 38, 22], [23, 39, 40, 24], [21, 37, 39, 23], [22, 38, 40, 24],  # Front right wheel
+        [25, 41, 42, 26], [27, 43, 44, 28], [25, 41, 43, 27], [26, 42, 44, 28],  # Rear left wheel
+        [29, 45, 46, 30], [31, 47, 48, 32], [29, 45, 47, 31], [30, 46, 48, 32]  # Rear right wheel
     ]
     textures: list[str] = [
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
+        'ahndureh.png',
         'ahndureh.png',
         'ahndureh.png',
         'ahndureh.png',
