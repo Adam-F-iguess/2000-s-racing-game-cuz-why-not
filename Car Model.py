@@ -18,6 +18,10 @@ import pygame
 import pygame_menu
 from math import sin, cos, pi, sqrt, radians
 
+
+clock = pygame.time.Clock()
+
+
 def show_controls():
     controls = [
         "W: Move forward",
@@ -532,8 +536,13 @@ def main():
             note = font.render("Press TAB to open Controls", True, (255, 255, 255))
             window.blit(note, (10, 10))
 
+        note2 = font.render(f"FPS: {int(round(clock.get_fps(), 0))}", True, (255, 255, 255))
+        window.blit(note2, (10, 700))
+
         pygame.display.update()
         ticks += 1
+        clock.tick(30)
+
 
     pygame.quit()
     exit()
