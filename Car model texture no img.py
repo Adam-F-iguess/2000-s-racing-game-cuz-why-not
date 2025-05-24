@@ -1,9 +1,28 @@
 #credit to Leet Unova (https://github.com/LeetUnova/Pygame-3D-Graphics?source=post_page-----c36ec2e03a33---------------------------------------) for the main code (all i did was add some of the movement parts)
 
 import pygame
+import pygame_menu
 from math import sin, cos, pi, sqrt, radians
 
 clock = pygame.time.Clock()
+
+def show_controls():
+    controls = [
+        "W: Move forward",
+        "S: Move backward",
+        "A: Move left",
+        "D: Move right",
+        "Q: Rotate left",
+        "E: Rotate right",
+        "Z: Rotate x-axis",
+        "X: Rotate x-axis (opposite)",
+        "C: Rotate z-axis",
+        "V: Rotate z-axis (opposite)",
+        "R: Move up",
+        "F: Move down",
+        "ESC: Reset position and rotation"
+    ]
+    return "\n".join(controls)
 
 def rotate(point, vertice, centre, angle, axis):
     cntx = centre[0]
@@ -336,71 +355,99 @@ class Car(Object3d):
         coloursheet = Car.COLOUR_SHEETS.get(coloursheet_id, Car.COLOUR_SHEETS["default"])
         super().__init__(Car.vertices, Car.edges, Car.faces, position, rotation, coloursheet)
 
-window = pygame.display.set_mode((1280, 720))
-pygame.display.set_caption("3d Graphics")
-done = False
+def main():
+    pygame.init()
+    window = pygame.display.set_mode((1280, 720))
+    pygame.display.set_caption("3D Graphics")
 
-car = Car([0, 0, 500], [0, 0, 0], "default")
+    menu = pygame_menu.Menu('Controls', 400, 300, theme=pygame_menu.themes.THEME_DARK, position=(0, 0))
+    menu.add.label(show_controls(), max_char=-1, font_size=20, font_color=(255, 255, 255), align=pygame_menu.locals.ALIGN_LEFT)
+    menu.add.button('Close (TAB)', pygame_menu.events.BACK)
 
-ticks = 0
-temp_pos = 0
-draging = False
-offset_x = 0
-offset_y = 0
-temp_pos_y = 0
-blank = 0
-rotx = 0
-rotz = 0
+    car = Car([0, 0, 500], [0, 0, 0])
 
-while not done:
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        car.position[2] -= 2
-    if keys[pygame.K_s]:
-        car.position[2] += 2
-    if keys[pygame.K_a]:
-        temp_pos += 2
-    if keys[pygame.K_d]:
-        temp_pos -= 2
-    if keys[pygame.K_q]:
-        blank += 1
-    if keys[pygame.K_e]:
-        blank -= 1
-    if keys[pygame.K_r]:
-        temp_pos_y += 2
-    if keys[pygame.K_f]:
-        temp_pos_y -= 2
-    if keys[pygame.K_z]:
-        rotx += 1
-    if keys[pygame.K_x]:
-        rotx -= 1
-    if keys[pygame.K_c]:
-        rotz += 1
-    if keys[pygame.K_v]:
-        rotz -= 1
-    if keys[pygame.K_ESCAPE]:
-        blank = 0
-        rotx = 0
-        rotz = 0
-        temp_pos = 0
-        temp_pos_y = 0
-        car.position[2] =  500
-    pygame.draw.rect(window, (135, 206, 235), (0, 0, 1280, 720))
-    car.position[0] =  temp_pos
-    car.position[1] =  temp_pos_y
-    car.rotation[0] = blank
-    car.rotation[1] = rotx
-    car.rotation[2] = rotz
-    car.draw(window)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
+    ticks = 0
+    temp_pos = 0
+    draging = False
+    offset_x = 0
+    offset_y = 0
+    temp_pos_y = 0
+    blank = 0
+    rotx = 0
+    rotz = 0
+
+    show_menu = False
+
+    font = pygame.font.SysFont(None, 24)
+
+    done = False
+    while not done:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                done = True
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_TAB:
+                    show_menu = not show_menu
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            car.position[2] -= 1
+        if keys[pygame.K_s]:
+            car.position[2] += 1
+        if keys[pygame.K_a]:
+            temp_pos += 1
+        if keys[pygame.K_d]:
+            temp_pos -= 1 
+        if keys[pygame.K_q]:
+            blank += .5
+        if keys[pygame.K_e]:
+            blank -= .5
+        if keys[pygame.K_r]:
+            temp_pos_y += 1
+        if keys[pygame.K_f]:
+            temp_pos_y -= 1
+        if keys[pygame.K_z]:
+            rotx += .5
+        if keys[pygame.K_x]:
+            rotx -= .5
+        if keys[pygame.K_c]:
+            rotz += .5
+        if keys[pygame.K_v]:
+            rotz -= .5
+        if keys[pygame.K_ESCAPE]:
+            blank = 0
+            rotx = 0
+            rotz = 0
+            temp_pos = 0
+            temp_pos_y = 0
+            car.position[2] =  500
+
+        pygame.draw.rect(window, (135, 206, 235), (0, 0, 1280, 720))
+        car.position[0] =  temp_pos
+        car.position[1] =  temp_pos_y
+        car.rotation[0] = blank
+        car.rotation[1] = rotx
+        car.rotation[2] = rotz
+        car.draw(window)
+
+        if show_menu:
+            menu.update(events)
+            menu.draw(window)
+        else:
+            note = font.render("Press TAB to open Controls", True, (255, 255, 255))
+            window.blit(note, (10, 10))
+
+        note2 = font.render(f"FPS: {int(round(clock.get_fps(), 0))}", True, (255, 255, 255))
+        window.blit(note2, (10, 700))
+
+        pygame.display.update()
+        ticks += 1
+        clock.tick(120)
 
 
-    
+    pygame.quit()
+    exit()
 
-    pygame.display.update()
-    ticks += 1
-    clock.tick(30)
-
-exit()
+if __name__ == "__main__":
+    main()
